@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TaskFlow - Sign Up</title>
+  <link rel="stylesheet" href="/public/css/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: 'Inter', system-ui, sans-serif; 
+      background: #ffffff; 
+      color: #000000; 
+      min-height: 100vh; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      padding: 20px;
+    }
+    .container { 
+      width: 100%; 
+      max-width: 480px; 
+      padding: 20px; 
+    }
+    .logo { 
+      text-align: center; 
+      margin-bottom: 32px; 
+    }
+    .logo h1 { 
+      font-size: 36px; 
+      font-weight: 700; 
+      color: #000000; 
+      letter-spacing: -0.5px; 
+    }
+    .logo .subtitle { 
+      font-size: 14px; 
+      color: #666666; 
+      margin-top: 4px; 
+    }
+    .card { 
+      background: #ffffff; 
+      border: 1px solid #e0e0e0; 
+      border-radius: 16px; 
+      padding: 40px; 
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); 
+    }
+    .title { 
+      font-weight: 600; 
+      font-size: 24px; 
+      margin-bottom: 24px; 
+      text-align: center; 
+    }
+    .form-row { 
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      gap: 16px; 
+      margin-bottom: 16px; 
+    }
+    .field { 
+      margin-bottom: 20px; 
+    }
+    .field label { 
+      display: block; 
+      margin-bottom: 8px; 
+      font-weight: 500; 
+      color: #666666; 
+      font-size: 14px; 
+    }
+    .field input { 
+      width: 100%; 
+      padding: 16px 20px; 
+      border-radius: 8px; 
+      border: 1px solid #e0e0e0; 
+      background: #ffffff; 
+      color: #000000; 
+      font-size: 16px; 
+      transition: all 0.3s ease; 
+    }
+    .field input:focus { 
+      outline: none; 
+      border-color: #000000; 
+      box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+    }
+    .field input.error { 
+      border-color: #ff4444; 
+    }
+    .password-strength { 
+      margin-top: 8px; 
+      font-size: 12px; 
+    }
+    .strength-bar { 
+      height: 4px; 
+      background: #333333; 
+      border-radius: 2px; 
+      margin-top: 4px; 
+      overflow: hidden; 
+    }
+    .strength-fill { 
+      height: 100%; 
+      transition: width 0.3s, background-color 0.3s; 
+      width: 0%; 
+    }
+    .strength-weak { background: #ff4444; }
+    .strength-medium { background: #ffaa00; }
+    .strength-strong { background: #00ff44; }
+    .btn { 
+      width: 100%; 
+      padding: 18px; 
+      border: none; 
+      border-radius: 8px; 
+      background: #000000; 
+      color: #ffffff; 
+      font-weight: 600; 
+      font-size: 16px; 
+      margin-top: 12px; 
+      cursor: pointer; 
+      transition: all 0.3s ease;
+    }
+    .btn:hover { 
+      background: #333333;
+    }
+    .btn:disabled { 
+      background: #cccccc; 
+      color: #666666; 
+      cursor: not-allowed; 
+    }
+    .alt { 
+      margin-top: 24px; 
+      font-size: 14px; 
+      color: #888888; 
+      text-align: center; 
+    }
+    .alt a { 
+      color: #000000; 
+      text-decoration: none; 
+      font-weight: 500; 
+    }
+    .alt a:hover { 
+      text-decoration: underline; 
+    }
+    .toast { 
+      position: fixed; 
+      top: 20px; 
+      right: 20px; 
+      background: #111111; 
+      border: 1px solid #333333; 
+      padding: 16px 20px; 
+      border-radius: 8px; 
+      color: #ffffff; 
+      display: none; 
+      z-index: 1000; 
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3); 
+    }
+    .toast.error { 
+      border-color: #ff4444; 
+      background: #1a0000; 
+    }
+    .toast.success { 
+      border-color: #00ff44; 
+      background: #001a00; 
+    }
+    .error-text { 
+      color: #ff4444; 
+      font-size: 12px; 
+      margin-top: 4px; 
+    }
+    @media (max-width: 600px) { 
+      .form-row { 
+        grid-template-columns: 1fr; 
+      } 
+      .card { 
+        padding: 24px; 
+      } 
+    }
+  </style>
+</head>
+<body>
+  <div class="toast" id="toast"></div>
+  <div class="container">
+    <div class="logo">
+      <h1>TaskFlow</h1>
+      <div class="subtitle">Streamline Your Workflow</div>
+    </div>
+    <div class="card">
+      <div class="title">Create Account</div>
+      <form id="signupForm">
+        <div class="form-row">
+          <div class="field">
+            <label for="first_name">First Name</label>
+            <input type="text" id="first_name" name="first_name" required />
+          </div>
+          <div class="field">
+            <label for="last_name">Last Name</label>
+            <input type="text" id="last_name" name="last_name" required />
+          </div>
+        </div>
+        <div class="field">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" required />
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required />
+          <div class="password-strength" id="passwordStrength"></div>
+          <div class="strength-bar">
+            <div class="strength-fill" id="strengthBar"></div>
+          </div>
+        </div>
+        <div class="field">
+          <label for="confirm_password">Confirm Password</label>
+          <input type="password" id="confirm_password" name="confirm_password" required />
+          <div class="error-text" id="passwordMatchError"></div>
+        </div>
+        <button type="submit" class="btn" id="submitBtn">Create Account</button>
+        <div class="alt">Already have an account? <a href="/signin">Sign in</a></div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function showToast(message, type = 'error') {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.className = `toast ${type}`;
+      toast.style.display = 'block';
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 4000);
+    }
+
+    function checkPasswordStrength(password) {
+      let score = 0;
+      let feedback = [];
+      
+      if (password.length >= 8) score += 1;
+      else feedback.push('At least 8 characters');
+      
+      if (/[a-z]/.test(password)) score += 1;
+      else feedback.push('Lowercase letter');
+      
+      if (/[A-Z]/.test(password)) score += 1;
+      else feedback.push('Uppercase letter');
+      
+      if (/[0-9]/.test(password)) score += 1;
+      else feedback.push('Number');
+      
+      if (/[^A-Za-z0-9]/.test(password)) score += 1;
+      else feedback.push('Special character');
+      
+      const strengthBar = document.getElementById('strengthBar');
+      const strengthText = document.getElementById('passwordStrength');
+      
+      if (score <= 2) {
+        strengthBar.className = 'strength-fill strength-weak';
+        strengthBar.style.width = '33%';
+        strengthText.textContent = 'Weak - ' + feedback.join(', ');
+        strengthText.style.color = '#ff4444';
+      } else if (score <= 3) {
+        strengthBar.className = 'strength-fill strength-medium';
+        strengthBar.style.width = '66%';
+        strengthText.textContent = 'Medium - ' + feedback.join(', ');
+        strengthText.style.color = '#ffaa00';
+      } else {
+        strengthBar.className = 'strength-fill strength-strong';
+        strengthBar.style.width = '100%';
+        strengthText.textContent = 'Strong password';
+        strengthText.style.color = '#00ff44';
+      }
+      
+      return score >= 3;
+    }
+
+    function validatePasswords() {
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirm_password').value;
+      const errorDiv = document.getElementById('passwordMatchError');
+      
+      if (confirmPassword && password !== confirmPassword) {
+        errorDiv.textContent = 'Passwords do not match';
+        document.getElementById('confirm_password').classList.add('error');
+        return false;
+      } else {
+        errorDiv.textContent = '';
+        document.getElementById('confirm_password').classList.remove('error');
+        return true;
+      }
+    }
+
+    document.getElementById('password').addEventListener('input', function() {
+      checkPasswordStrength(this.value);
+      validatePasswords();
+    });
+
+    document.getElementById('confirm_password').addEventListener('input', validatePasswords);
+
+    document.getElementById('signupForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Creating Account...';
+      
+      const formData = new FormData(this);
+      const password = formData.get('password');
+      
+      if (!checkPasswordStrength(password)) {
+        showToast('Password is too weak. Please improve it.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Create Account';
+        return;
+      }
+      
+      if (!validatePasswords()) {
+        showToast('Passwords do not match.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Create Account';
+        return;
+      }
+      
+      try {
+        const response = await fetch('/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams(formData)
+        });
+        
+        if (response.ok) {
+          showToast('Account created successfully!', 'success');
+          setTimeout(() => {
+            window.location.href = '/index';
+          }, 1500);
+        } else {
+          const data = await response.json();
+          showToast(data.error || 'Failed to create account');
+        }
+      } catch (error) {
+        showToast('Network error. Please try again.');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Create Account';
+      }
+    });
+  </script>
+</body>
+</html>

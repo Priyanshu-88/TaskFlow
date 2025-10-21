@@ -1,0 +1,7 @@
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;font-family:'Inter',system-ui,sans-serif;background:#000000;color:#ffffff}
+a{color:#ffffff;text-decoration:none}
+a:hover{text-decoration:underline}
+button{cursor:pointer;transition:all 0.2s}
+input,select,textarea{font-family:inherit}
+

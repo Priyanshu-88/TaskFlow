@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TaskFlow - Sign In</title>
+  <link rel="stylesheet" href="/public/css/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: 'Inter', system-ui, sans-serif; 
+      background: #ffffff; 
+      color: #000000; 
+      min-height: 100vh; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      padding: 20px;
+    }
+    .container { 
+      width: 100%; 
+      max-width: 400px; 
+      padding: 20px; 
+    }
+    .logo { 
+      text-align: center; 
+      margin-bottom: 32px; 
+    }
+    .logo h1 { 
+      font-size: 36px; 
+      font-weight: 700; 
+      color: #000000; 
+      letter-spacing: -0.5px; 
+    }
+    .logo .subtitle { 
+      font-size: 14px; 
+      color: #666666; 
+      margin-top: 4px; 
+    }
+    .card { 
+      background: #ffffff; 
+      border: 1px solid #e0e0e0; 
+      border-radius: 16px; 
+      padding: 40px; 
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); 
+    }
+    .title { 
+      font-weight: 600; 
+      font-size: 24px; 
+      margin-bottom: 24px; 
+      text-align: center; 
+    }
+    .field { 
+      margin-bottom: 20px; 
+    }
+    .field label { 
+      display: block; 
+      margin-bottom: 8px; 
+      font-weight: 500; 
+      color: #666666; 
+      font-size: 14px; 
+    }
+    .field input { 
+      width: 100%; 
+      padding: 16px 20px; 
+      border-radius: 8px; 
+      border: 1px solid #e0e0e0; 
+      background: #ffffff; 
+      color: #000000; 
+      font-size: 16px; 
+      transition: all 0.3s ease; 
+    }
+    .field input:focus { 
+      outline: none; 
+      border-color: #000000; 
+      box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+    }
+    .field input.error { 
+      border-color: #ff4444; 
+    }
+    .btn { 
+      width: 100%; 
+      padding: 18px; 
+      border: none; 
+      border-radius: 8px; 
+      background: #000000; 
+      color: #ffffff; 
+      font-weight: 600; 
+      font-size: 16px; 
+      margin-top: 12px; 
+      cursor: pointer; 
+      transition: all 0.3s ease;
+    }
+    .btn:hover { 
+      background: #333333;
+    }
+    .btn:disabled { 
+      background: #cccccc; 
+      color: #666666; 
+      cursor: not-allowed; 
+    }
+    .alt { 
+      margin-top: 24px; 
+      font-size: 14px; 
+      color: #888888; 
+      text-align: center; 
+    }
+    .alt a { 
+      color: #000000; 
+      text-decoration: none; 
+      font-weight: 500; 
+    }
+    .alt a:hover { 
+      text-decoration: underline; 
+    }
+    .toast { 
+      position: fixed; 
+      top: 20px; 
+      right: 20px; 
+      background: #111111; 
+      border: 1px solid #333333; 
+      padding: 16px 20px; 
+      border-radius: 8px; 
+      color: #ffffff; 
+      display: none; 
+      z-index: 1000; 
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3); 
+    }
+    .toast.error { 
+      border-color: #ff4444; 
+      background: #1a0000; 
+    }
+    .toast.success { 
+      border-color: #00ff44; 
+      background: #001a00; 
+    }
+    .error-text { 
+      color: #ff4444; 
+      font-size: 12px; 
+      margin-top: 4px; 
+    }
+    @media (max-width: 600px) { 
+      .card { 
+        padding: 24px; 
+      } 
+    }
+  </style>
+</head>
+<body>
+  <div class="toast" id="toast"></div>
+  <div class="container">
+    <div class="logo">
+      <h1>TaskFlow</h1>
+      <div class="subtitle">Streamline Your Workflow</div>
+    </div>
+    <div class="card">
+      <div class="title">Welcome Back</div>
+      <form id="signinForm">
+        <div class="field">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" required />
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required />
+        </div>
+        <button type="submit" class="btn" id="submitBtn">Sign In</button>
+        <div class="alt">Don't have an account? <a href="/signup">Create one</a></div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function showToast(message, type = 'error') {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.className = `toast ${type}`;
+      toast.style.display = 'block';
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 4000);
+    }
+
+    document.getElementById('signinForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Signing In...';
+      
+      const formData = new FormData(this);
+      
+      try {
+        const response = await fetch('/signin', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams(formData)
+        });
+        
+        if (response.ok) {
+          showToast('Welcome back!', 'success');
+          setTimeout(() => {
+            window.location.href = '/index';
+          }, 1000);
+        } else {
+          const data = await response.json();
+          showToast(data.error || 'Invalid email or password');
+          
+          // Add error styling to inputs
+          document.getElementById('email').classList.add('error');
+          document.getElementById('password').classList.add('error');
+          
+          // Remove error styling after 3 seconds
+          setTimeout(() => {
+            document.getElementById('email').classList.remove('error');
+            document.getElementById('password').classList.remove('error');
+          }, 3000);
+        }
+      } catch (error) {
+        showToast('Network error. Please try again.');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Sign In';
+      }
+    });
+
+    // Remove error styling when user starts typing
+    document.getElementById('email').addEventListener('input', function() {
+      this.classList.remove('error');
+    });
+    
+    document.getElementById('password').addEventListener('input', function() {
+      this.classList.remove('error');
+    });
+  </script>
+</body>
+</html>
