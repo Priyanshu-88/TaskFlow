@@ -8,6 +8,10 @@ const sanitizeHtml = require('sanitize-html');
 const db = require('./db');
 
 const app = express();
+
+// Trust Render's proxy - CRITICAL FIX
+app.set('trust proxy', 1);
+
 const server = http.createServer(app);
 const io = new Server(server);
 
@@ -20,6 +24,8 @@ const sessionMiddleware = session({
   saveUninitialized: false,
   cookie: {
     secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    sameSite: 'lax',
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
 });
