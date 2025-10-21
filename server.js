@@ -15,9 +15,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const sessionMiddleware = session({
-  secret: 'change_this_secret',
+  secret: process.env.SESSION_SECRET || 'change_this_secret_in_production',
   resave: false,
   saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
 });
 
 app.use(sessionMiddleware);
@@ -258,5 +262,3 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log('Server listening on http://localhost:' + PORT);
 });
-
-
